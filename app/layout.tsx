@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Inter } from "next/font/google";
 import "./globals.css";
-import Sidebar from "@/components/dashboard/Sidebar";
-import Header from "@/components/dashboard/Header";
-import UrgentAlert from "@/components/dashboard/UrgentAlert";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -18,7 +15,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "DoaVida | Painel Hospitalar",
+  title: "DoaVida Health",
   description: "Sistema de Gestão de Doações de Sangue",
 };
 
@@ -35,13 +32,8 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         />
       </head>
-      <body className="bg-gray-50 text-gray-900 flex min-h-screen">
-        <Sidebar />
-        <div className="flex-1 ml-64 min-h-screen flex flex-col">
-          <Header />
-          <main className="mt-16 p-10 flex-1">{children}</main>
-        </div>
-        <UrgentAlert />
+      <body className="bg-gray-50 text-gray-900">
+        {children}
       </body>
     </html>
   );

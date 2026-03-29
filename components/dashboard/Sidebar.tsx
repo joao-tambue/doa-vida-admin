@@ -10,12 +10,12 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { icon: "dashboard", label: "Painel Geral", href: "/" },
-  { icon: "emergency_home", label: "Pedidos Ativos", href: "/pedidos-ativos" },
-  { icon: "add_circle", label: "Criar Pedido", href: "/criar-pedido" },
-  { icon: "bloodtype", label: "Inventário de Sangue", href: "/inventario" },
-  { icon: "history", label: "Histórico", href: "/historico" },
-  { icon: "settings", label: "Definições", href: "/definicoes" },
+  { icon: "dashboard", label: "Painel Geral", href: "/dashboard" },
+  { icon: "emergency_home", label: "Pedidos Ativos", href: "/dashboard/pedidos-ativos" },
+  { icon: "add_circle", label: "Criar Pedido", href: "/dashboard/criar-pedido" },
+  { icon: "bloodtype", label: "Inventário de Sangue", href: "/dashboard/inventario" },
+  { icon: "history", label: "Histórico", href: "/dashboard/historico" },
+  { icon: "settings", label: "Definições", href: "/dashboard/configuracoes" },
 ];
 
 export default function Sidebar() {
