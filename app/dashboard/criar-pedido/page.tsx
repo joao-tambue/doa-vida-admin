@@ -28,41 +28,41 @@ import RequestSummarySidebar from "@/components/dashboard/create-order/RequestSu
 //   );
 // }
 
-function BottomActions() {
-  const { isPending, submit, saveDraft } = useBloodRequest();
-  return (
-    <div className="flex items-center justify-end gap-4 py-8">
-      <button
-        type="button"
-        onClick={saveDraft}
-        disabled={isPending}
-        className="px-8 py-4 text-sm font-bold text-secondary hover:text-on-surface transition-colors disabled:opacity-60"
-      >
-        Salvar como Rascunho
-      </button>
-      <button
-        type="button"
-        onClick={submit}
-        disabled={isPending}
-        className="bg-[#b7131a] text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-[#db322f] hover:shadow-lg transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
-      >
-        {isPending ? (
-          <>
-            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            <span>A enviar...</span>
-          </>
-        ) : (
-          <>
-            Enviar Pedido
-            <span className="material-symbols-outlined text-sm">
-              arrow_forward
-            </span>
-          </>
-        )}
-      </button>
-    </div>
-  );
-}
+// function BottomActions() {
+//   const { isPending, submit, saveDraft } = useBloodRequest();
+//   return (
+//     <div className="flex items-center justify-end gap-4 py-8">
+//       <button
+//         type="button"
+//         onClick={saveDraft}
+//         disabled={isPending}
+//         className="px-8 py-4 text-sm font-bold text-secondary hover:text-on-surface transition-colors disabled:opacity-60"
+//       >
+//         Salvar como Rascunho
+//       </button>
+//       <button
+//         type="button"
+//         onClick={submit}
+//         disabled={isPending}
+//         className="bg-[#b7131a] text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-[#db322f] hover:shadow-lg transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+//       >
+//         {isPending ? (
+//           <>
+//             <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+//             <span>A enviar...</span>
+//           </>
+//         ) : (
+//           <>
+//             Enviar Pedido
+//             <span className="material-symbols-outlined text-sm">
+//               arrow_forward
+//             </span>
+//           </>
+//         )}
+//       </button>
+//     </div>
+//   );
+// }
 
 function CriarPedidoLayout() {
   const { errorMsg } = useBloodRequest();
@@ -82,7 +82,7 @@ function CriarPedidoLayout() {
           <PatientInformationSection />
           <RequestLogisticsSection />
           <ClinicalDocumentationSection />
-          <BottomActions />
+          {/* <BottomActions /> */}
         </div>
 
         <div className="lg:col-span-1">

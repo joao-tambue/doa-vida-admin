@@ -9,7 +9,6 @@ import {
 } from "react";
 import { createBloodRequestAction } from "@/actions/requests/create";
 
-// ─── tipos ────────────────────────────────────────────────────────────────────
 export type BloodType = "O+" | "O-" | "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-";
 export type Urgency = "normal" | "critico";
 export type Diagnosis =
@@ -45,7 +44,6 @@ interface BloodRequestContextValue {
   saveDraft: () => void;
 }
 
-// ─── context ──────────────────────────────────────────────────────────────────
 const BloodRequestContext = createContext<BloodRequestContextValue | null>(
   null,
 );
@@ -59,7 +57,6 @@ export function useBloodRequest() {
   return ctx;
 }
 
-// ─── provider ─────────────────────────────────────────────────────────────────
 export function BloodRequestProvider({
   children,
 }: {
@@ -117,7 +114,6 @@ export function BloodRequestProvider({
   }, [form]);
 
   const saveDraft = useCallback(() => {
-    // TODO: implementar persistência de rascunho (localStorage ou tabela drafts)
     console.log("Rascunho guardado", form);
   }, [form]);
 
