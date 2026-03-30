@@ -8,6 +8,7 @@
 import Header from "@/components/dashboard/Header";
 import Sidebar from "@/components/dashboard/Sidebar";
 import UrgentAlert from "@/components/dashboard/UrgentAlert";
+import { Toaster } from "react-hot-toast";
 
 // const manrope = Manrope({
 //   subsets: ["latin"],
@@ -51,7 +52,6 @@ import UrgentAlert from "@/components/dashboard/UrgentAlert";
 //   );
 // }
 
-
 export default function DashboardLayout({
   children,
 }: {
@@ -62,7 +62,10 @@ export default function DashboardLayout({
       <Sidebar />
       <div className="flex-1 ml-64 min-h-screen flex flex-col">
         <Header />
-        <main className="mt-16 p-10 flex-1">{children}</main>
+        <main className="mt-16 p-10 flex-1">
+          {children}
+          <Toaster position="top-center" reverseOrder={false} />
+        </main>
       </div>
       {/* <UrgentAlert /> */}
     </div>
