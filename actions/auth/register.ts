@@ -16,7 +16,6 @@ export async function registerAction(formData: FormData) {
   const confirmPassword = formData.get("confirmPassword") as string;
   const certFile = formData.get("certFile") as File | null;
 
-  // Validações básicas
   if (!fullName || !email || !password) {
     return { error: "Por favor preencha todos os campos obrigatórios." };
   }
@@ -29,12 +28,12 @@ export async function registerAction(formData: FormData) {
     return { error: "A palavra-passe deve ter pelo menos 8 caracteres." };
   }
 
-  // 1. Criar conta no Supabase Auth
+  // Criar conta no Supabase Auth
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { full_name: fullName }, // lido pelo trigger handle_new_user
+      data: { full_name: fullName },
     },
   });
 
@@ -48,7 +47,7 @@ export async function registerAction(formData: FormData) {
   const userId = authData.user?.id;
   if (!userId) return { error: "Erro ao criar conta. Tente novamente." };
 
-  // 2. Upload do certificado (se fornecido)
+  // Upload do certificado (caso for fornecido)
   let certFileUrl: string | null = null;
   if (certFile && certFile.size > 0) {
     const ext = certFile.name.split(".").pop();
@@ -66,7 +65,7 @@ export async function registerAction(formData: FormData) {
     }
   }
 
-  // 3. Completar o perfil (o trigger já criou a linha, fazemos update)
+  // Completar o perfil do utilizador
   const { error: profileError } = await supabase
     .from("profiles")
     .update({

@@ -19,7 +19,7 @@ export async function createClient() {
               cookieStore.set(name, value, options),
             );
           } catch {
-            // Ignorado em Server Components (apenas Route Handlers podem escrever cookies)
+            // Ignorado em Server Components
           }
         },
       },

@@ -40,6 +40,11 @@ export default function Header() {
               className="object-cover"
             />
           </div>
+          <span>
+            <span className="material-symbols-outlined text-gray-400">
+              expand_more
+            </span>
+          </span>
         </div>
       </div>
     </header>

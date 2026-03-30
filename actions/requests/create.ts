@@ -48,8 +48,6 @@ export async function createBloodRequestAction(formData: FormData) {
   if (isNaN(unitsRequested) || unitsRequested < 1) {
     return { error: "Número de unidades inválido." };
   }
-
-  // Upload dos registos médicos (opcional)
   let medicalRecordsUrl: string | null = null;
   if (medicalFile && medicalFile.size > 0) {
     const ext = medicalFile.name.split(".").pop();
