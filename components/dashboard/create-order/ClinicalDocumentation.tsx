@@ -16,7 +16,7 @@ export default function ClinicalDocumentationSection() {
             className="w-full bg-surface border-none rounded-lg p-4 focus:ring-2 focus:ring-primary/20 transition-all text-sm"
           />
         </div>
-        
+
         <div className="space-y-2">
           <label className="text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-secondary block">
             Número de Telefone
@@ -48,8 +48,12 @@ export default function ClinicalDocumentationSection() {
           <span className="material-symbols-outlined text-4xl text-secondary group-hover:text-primary transition-colors mb-4">
             cloud_upload
           </span>
-          <p className="text-sm font-semibold text-on-surface">Clique para enviar ou arraste e solte</p>
-          <p className="text-[0.6875rem] text-secondary mt-1">Tamanho máximo do arquivo: 10MB</p>
+          <p className="text-sm font-semibold text-on-surface">
+            Clique para enviar ou arraste e solte
+          </p>
+          <p className="text-[0.6875rem] text-secondary mt-1">
+            Tamanho máximo do arquivo: 10MB
+          </p>
         </div>
       </div>
     </section>
