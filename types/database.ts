@@ -1,6 +1,3 @@
-// types/database.ts
-// Tipos TypeScript que espelham o schema do Supabase
-
 export type Json =
   | string
   | number
@@ -10,12 +7,14 @@ export type Json =
   | Json[];
 
 export type BloodType = "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
+
 export type UserRole =
   | "admin"
   | "medico"
   | "enfermeiro"
   | "laboratorista"
   | "gestor";
+
 export type RequestStatus =
   | "pendente"
   | "aprovado"
@@ -24,13 +23,16 @@ export type RequestStatus =
   | "concluido"
   | "cancelado"
   | "rejeitado";
+
 export type UrgencyLevel = "normal" | "critico";
+
 export type NotificationType =
   | "pedido_novo"
   | "pedido_atualizado"
   | "stock_critico"
   | "stock_atualizado"
   | "sistema";
+
 export type StockReason =
   | "receção"
   | "pedido_atendido"
@@ -62,7 +64,7 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["institutions"]["Insert"]>;
       };
 
-      profiles: {
+      admin_profiles: {
         Row: {
           id: string;
           institution_id: string | null;
@@ -76,10 +78,12 @@ export interface Database {
           updated_at: string;
         };
         Insert: Omit<
-          Database["public"]["Tables"]["profiles"]["Row"],
+          Database["public"]["Tables"]["admin_profiles"]["Row"],
           "created_at" | "updated_at"
         >;
-        Update: Partial<Database["public"]["Tables"]["profiles"]["Insert"]>;
+        Update: Partial<
+          Database["public"]["Tables"]["admin_profiles"]["Insert"]
+        >;
       };
 
       blood_inventory: {
@@ -121,7 +125,7 @@ export interface Database {
         >;
       };
 
-      blood_requests: {
+      admin_blood_requests: {
         Row: {
           id: string;
           institution_id: string;
@@ -144,15 +148,15 @@ export interface Database {
           updated_at: string;
         };
         Insert: Omit<
-          Database["public"]["Tables"]["blood_requests"]["Row"],
+          Database["public"]["Tables"]["admin_blood_requests"]["Row"],
           "id" | "created_at" | "updated_at"
         > & { id?: string };
         Update: Partial<
-          Database["public"]["Tables"]["blood_requests"]["Insert"]
+          Database["public"]["Tables"]["admin_blood_requests"]["Insert"]
         >;
       };
 
-      notifications: {
+      admin_notifications: {
         Row: {
           id: string;
           user_id: string;
@@ -164,15 +168,15 @@ export interface Database {
           created_at: string;
         };
         Insert: Omit<
-          Database["public"]["Tables"]["notifications"]["Row"],
+          Database["public"]["Tables"]["admin_notifications"]["Row"],
           "id" | "created_at"
         > & { id?: string };
         Update: Partial<
-          Database["public"]["Tables"]["notifications"]["Insert"]
+          Database["public"]["Tables"]["admin_notifications"]["Insert"]
         >;
       };
 
-      alert_preferences: {
+      admin_alert_preferences: {
         Row: {
           id: string;
           user_id: string;
@@ -185,16 +189,17 @@ export interface Database {
           updated_at: string;
         };
         Insert: Omit<
-          Database["public"]["Tables"]["alert_preferences"]["Row"],
+          Database["public"]["Tables"]["admin_alert_preferences"]["Row"],
           "id" | "created_at" | "updated_at"
         > & { id?: string };
         Update: Partial<
-          Database["public"]["Tables"]["alert_preferences"]["Insert"]
+          Database["public"]["Tables"]["admin_alert_preferences"]["Insert"]
         >;
       };
     };
 
     Functions: {
+      // ⚠️ essas funções continuam apontando para "profiles" original
       my_institution_id: { Returns: string };
       my_role: { Returns: UserRole };
     };
