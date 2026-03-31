@@ -87,7 +87,7 @@ export default function RequestSummarySidebar() {
               </p>
             </div>
 
-            {form.contactPerson.trim() && (
+            {form.contactPerson?.trim() && (
               <div className="flex items-center gap-3">
                 <span className="material-symbols-outlined text-secondary text-lg">
                   person

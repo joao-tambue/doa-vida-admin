@@ -1,9 +1,37 @@
-import { METRICS } from "@/data/metrics";
+import type { ApiMetrics } from "@/lib/api/queries";
 
-export default function DashboardMetrics() {
+interface Props {
+  metrics: ApiMetrics | null;
+}
+
+export default function DashboardMetrics({ metrics }: Props) {
+  const cards = [
+    {
+      label: "Total de Dadores do Hospital",
+      value: metrics ? metrics.total_donors.toLocaleString("pt-AO") : "—",
+      trendIcon: "",
+      trendText: "",
+      variant: "hover-primary" as const,
+    },
+    {
+      label: "Pedidos Ativos",
+      value: metrics ? String(metrics.active_requests) : "—",
+      trendIcon: "priority_high",
+      trendText: "",
+      variant: "accent-left" as const,
+    },
+    {
+      label: "Taxa de Cumprimento",
+      value: metrics ? `${metrics.fulfillment_rate}%` : "—",
+      trendIcon: "check_circle",
+      trendText: "",
+      variant: "hover-tertiary" as const,
+    },
+  ];
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-      {METRICS.map((m) => {
+      {cards.map((m) => {
         const isHoverPrimary = m.variant === "hover-primary";
         const isAccentLeft = m.variant === "accent-left";
         const isHoverTertiary = m.variant === "hover-tertiary";
@@ -40,9 +68,7 @@ export default function DashboardMetrics() {
                 ${isHoverTertiary ? "text-[#006578] group-hover:text-white" : ""}
               `}
             >
-              <span className="material-symbols-outlined text-sm">
-                {m.trendIcon}
-              </span>
+              <span className="material-symbols-outlined text-sm">{m.trendIcon}</span>
               <span>{m.trendText}</span>
             </div>
           </div>

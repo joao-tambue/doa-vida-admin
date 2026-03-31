@@ -2,7 +2,7 @@ import { MetricCard } from "@/types/metric";
 
 export const METRICS: MetricCard[] = [
   {
-    label: "Total de Dadores em Angola",
+    label: "Total de Dadores do Hospital",
     value: "12,482",
     trendIcon: "",
     trendText: "",

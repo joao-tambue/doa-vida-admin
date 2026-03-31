@@ -1,45 +1,73 @@
 "use client";
 
-import { RECORDS, STATUS_CONFIG } from "@/data/history";
 import { useState } from "react";
+import type { ApiRequest } from "@/lib/api/queries";
 
+interface Props {
+  records: ApiRequest[];
+}
+
+type HistoryStatus = "Concluído" | "Expirado" | "Cancelado";
 type FilterTab = "Todos" | "Concluído" | "Expirado";
 
 const FILTER_TABS: FilterTab[] = ["Todos", "Concluído", "Expirado"];
 
-// type HistoryStatus = "Concluído" | "Expirado" | "Cancelled";
-type HistoryUrgency = "Emergency" | "Normal" | "Urgent";
-// type FilterTab = "Todos" | "Concluído" | "Expirado";
-
-export const URGENCY_CONFIG: Record<HistoryUrgency, string> = {
-  Emergency: "bg-[#ffdad6] text-[#93000a]",
-  Normal: "bg-gray-100 text-gray-600",
-  Urgent: "bg-gray-100 text-gray-600",
+const STATUS_CONFIG: Record<HistoryStatus, { dot: string; text: string; label: string }> = {
+  Concluído: { dot: "bg-[#006578]", text: "text-[#008097]", label: "Concluído" },
+  Expirado: { dot: "bg-zinc-400", text: "text-zinc-400", label: "Expirado" },
+  Cancelado: { dot: "bg-[#ba1a1a]", text: "text-[#ba1a1a]", label: "Cancelado" },
 };
 
-export default function HistoryTable() {
-  const [activeTab, setActiveTab] = useState<FilterTab>("Todos");
-  const [currentPage, setCurrentPage] = useState<number>(1);
+function mapStatus(status: ApiRequest["status"]): HistoryStatus {
+  if (status === "completed") return "Concluído";
+  if (status === "expired") return "Expirado";
+  return "Cancelado";
+}
 
-  const filtered = RECORDS.filter((r) => {
+function bloodBg(bloodType: string): string {
+  const critical = ["O-", "B-", "AB-"];
+  return critical.includes(bloodType)
+    ? "bg-red-50 text-red-700"
+    : "bg-zinc-100 text-zinc-700";
+}
+
+function formatDatetime(isoDate: string): string {
+  return new Date(isoDate).toLocaleString("pt-AO", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+const ITEMS_PER_PAGE = 10;
+
+export default function HistoryTable({ records }: Props) {
+  const [activeTab, setActiveTab] = useState<FilterTab>("Todos");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const filtered = records.filter((r) => {
+    const status = mapStatus(r.status);
     if (activeTab === "Todos") return true;
-    if (activeTab === "Concluído") return r.status === "Concluído";
-    if (activeTab === "Expirado") return r.status === "Expirado";
+    if (activeTab === "Concluído") return status === "Concluído";
+    if (activeTab === "Expirado") return status === "Expirado";
     return true;
   });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
+  const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   return (
     <section className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
       <div className="px-8 py-6 flex justify-between items-center border-b border-zinc-100">
         <div className="flex gap-6 items-center">
-          <h3 className="font-extrabold text-lg text-gray-900">
-            Dados Arquivados
-          </h3>
+          <h3 className="font-extrabold text-lg text-gray-900">Dados Arquivados</h3>
           <div className="flex gap-2">
             {FILTER_TABS.map((tab) => (
               <button
                 key={tab}
-                onClick={() => setActiveTab(tab)}
+                onClick={() => { setActiveTab(tab); setCurrentPage(1); }}
                 className={`px-3 py-1 text-[10px] font-bold rounded-full transition-colors ${
                   activeTab === tab
                     ? "bg-[#b7131a] text-white"
@@ -52,29 +80,20 @@ export default function HistoryTable() {
           </div>
         </div>
         <p className="text-xs text-zinc-400 font-medium italic">
-          Mostrando {filtered.length} de 2,410 Casos
+          Mostrando {paginated.length} de {filtered.length} casos
         </p>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-zinc-50">
-              {[
-                "Request ID",
-                "Date & Time",
-                "Patient",
-                "Blood Type",
-                "Units",
-                "Status",
-                "Action",
-              ].map((col) => (
+              {["Request ID", "Data", "Paciente", "Tipo de Sangue", "Unidades", "Estado", "Ação"].map((col) => (
                 <th
                   key={col}
                   className={`px-8 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-wider ${
-                    col === "Units" ? "text-center" : ""
-                  } ${col === "Action" ? "text-right" : ""}`}
+                    col === "Unidades" ? "text-center" : ""
+                  } ${col === "Ação" ? "text-right" : ""}`}
                 >
                   {col}
                 </th>
@@ -82,57 +101,56 @@ export default function HistoryTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-50">
-            {filtered.map((record) => {
-              const statusCfg = STATUS_CONFIG[record.status];
-              return (
-                <tr
-                  key={record.id}
-                  className="hover:bg-zinc-50 transition-colors group"
-                >
-                  <td className="px-8 py-5 text-sm font-bold text-gray-900">
-                    {record.id}
-                  </td>
-                  <td className="px-8 py-5 text-sm text-zinc-500">
-                    {record.datetime}
-                  </td>
-                  <td className="px-8 py-5 text-sm font-medium text-gray-900">
-                    {record.patient}
-                  </td>
-                  <td className="px-8 py-5">
-                    <span
-                      className={`px-3 py-1 text-xs font-black rounded-lg ${record.bloodBg}`}
-                    >
-                      {record.bloodType}
-                    </span>
-                  </td>
-                  <td className="px-8 py-5 text-center font-bold text-sm">
-                    {record.units}
-                  </td>
-                  <td className="px-8 py-5">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`w-2 h-2 rounded-full ${statusCfg.dot}`}
-                      />
-                      <span
-                        className={`text-xs font-bold uppercase tracking-tight ${statusCfg.text}`}
-                      >
-                        {statusCfg.label}
+            {paginated.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="px-8 py-10 text-center text-sm text-zinc-400">
+                  Sem registos encontrados.
+                </td>
+              </tr>
+            ) : (
+              paginated.map((record) => {
+                const status = mapStatus(record.status);
+                const statusCfg = STATUS_CONFIG[status];
+                return (
+                  <tr key={record.id} className="hover:bg-zinc-50 transition-colors group">
+                    <td className="px-8 py-5 text-sm font-bold text-gray-900">
+                      {record.case_id}
+                    </td>
+                    <td className="px-8 py-5 text-sm text-zinc-500">
+                      {formatDatetime(record.created_at)}
+                    </td>
+                    <td className="px-8 py-5 text-sm font-medium text-gray-900">
+                      {record.patient_name}
+                    </td>
+                    <td className="px-8 py-5">
+                      <span className={`px-3 py-1 text-xs font-black rounded-lg ${bloodBg(record.blood_type)}`}>
+                        {record.blood_type}
                       </span>
-                    </div>
-                  </td>
-                  <td className="px-8 py-5 text-right">
-                    <button className="material-symbols-outlined text-zinc-400 group-hover:text-[#b7131a] transition-colors">
-                      more_horiz
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
+                    </td>
+                    <td className="px-8 py-5 text-center font-bold text-sm">
+                      {record.bags_quantity}
+                    </td>
+                    <td className="px-8 py-5">
+                      <div className="flex items-center gap-2">
+                        <span className={`w-2 h-2 rounded-full ${statusCfg.dot}`} />
+                        <span className={`text-xs font-bold uppercase tracking-tight ${statusCfg.text}`}>
+                          {statusCfg.label}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-8 py-5 text-right">
+                      <button className="material-symbols-outlined text-zinc-400 group-hover:text-[#b7131a] transition-colors">
+                        more_horiz
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>
 
-      {/* Paginação */}
       <div className="px-8 py-6 bg-zinc-50 flex justify-between items-center border-t border-zinc-100">
         <button
           onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
@@ -142,32 +160,24 @@ export default function HistoryTable() {
           Anterior
         </button>
         <div className="flex items-center gap-2">
-          {[1, 2, 3].map((page) => (
+          {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((page) => (
             <button
               key={page}
               onClick={() => setCurrentPage(page)}
               className={`w-8 h-8 rounded-lg text-xs font-bold transition-colors ${
-                currentPage === page
-                  ? "bg-[#b7131a] text-white"
-                  : "text-zinc-500 hover:bg-zinc-200"
+                currentPage === page ? "bg-[#b7131a] text-white" : "text-zinc-500 hover:bg-zinc-200"
               }`}
             >
               {page}
             </button>
           ))}
-          <span className="text-zinc-400 px-1">...</span>
-          <button className="w-8 h-8 rounded-lg text-zinc-500 text-xs font-bold hover:bg-zinc-200">
-            241
-          </button>
         </div>
         <button
-          onClick={() => setCurrentPage((p) => p + 1)}
+          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
           className="flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-gray-900 transition-colors"
         >
           Próximo
-          <span className="material-symbols-outlined text-lg">
-            arrow_forward
-          </span>
+          <span className="material-symbols-outlined text-lg">arrow_forward</span>
         </button>
       </div>
     </section>

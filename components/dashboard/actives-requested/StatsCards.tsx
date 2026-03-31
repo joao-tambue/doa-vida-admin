@@ -1,44 +1,37 @@
-interface StatCard {
-  label: string;
-  value: string;
-  valueColor: string;
-  iconBg: string;
-  iconColor: string;
-  icon: string;
-  borderAccent?: string;
-  pulse?: boolean;
+import type { ApiMetrics, ApiBloodStock } from "@/lib/api/queries";
+
+interface Props {
+  metrics: ApiMetrics | null;
+  bloodStock: ApiBloodStock[];
 }
 
-const stats: StatCard[] = [
-  {
-    label: "Stock Crítico",
-    value: "O Negativo",
-    valueColor: "text-[#b7131a]",
-    iconBg: "bg-red-100",
-    iconColor: "text-red-800",
-    icon: "warning",
-    borderAccent: "border-l-4 border-[#b7131a]",
-    pulse: true,
-  },
-  {
-    label: "Total Ativos",
-    value: "24 Pedidos",
-    valueColor: "text-gray-900",
-    iconBg: "bg-gray-200",
-    iconColor: "text-gray-600",
-    icon: "pending",
-  },
-  // {
-  //   label: "Concluídos Hoje",
-  //   value: "12 Unidades",
-  //   valueColor: "text-[#006578]",
-  //   iconBg: "bg-[#008097]",
-  //   iconColor: "text-white",
-  //   icon: "check_circle",
-  // },
-];
+export default function StatsCards({ metrics, bloodStock }: Props) {
+  const criticalType = bloodStock.find((s) => s.level === "critico");
+  const activeCount = metrics ? metrics.active_requests : 0;
 
-export default function StatsCards() {
+  const stats = [
+    {
+      label: "Stock Crítico",
+      value: criticalType ? criticalType.blood_type : "—",
+      valueColor: criticalType ? "text-[#b7131a]" : "text-gray-400",
+      iconBg: "bg-red-100",
+      iconColor: "text-red-800",
+      icon: "warning",
+      borderAccent: "border-l-4 border-[#b7131a]",
+      pulse: !!criticalType,
+    },
+    {
+      label: "Total Ativos",
+      value: `${activeCount} Pedidos`,
+      valueColor: "text-gray-900",
+      iconBg: "bg-gray-200",
+      iconColor: "text-gray-600",
+      icon: "pending",
+      borderAccent: undefined,
+      pulse: false,
+    },
+  ];
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
       {stats.map((stat) => (
@@ -50,13 +43,9 @@ export default function StatsCards() {
             <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">
               {stat.label}
             </p>
-            <h3 className={`text-2xl font-black ${stat.valueColor}`}>
-              {stat.value}
-            </h3>
+            <h3 className={`text-2xl font-black ${stat.valueColor}`}>{stat.value}</h3>
           </div>
-          <div
-            className={`p-3 rounded-full ${stat.iconBg} ${stat.pulse ? "animate-pulse" : ""}`}
-          >
+          <div className={`p-3 rounded-full ${stat.iconBg} ${stat.pulse ? "animate-pulse" : ""}`}>
             <span
               className={`material-symbols-outlined ${stat.iconColor}`}
               style={{ fontVariationSettings: "'FILL' 1" }}

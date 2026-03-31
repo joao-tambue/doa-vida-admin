@@ -3,21 +3,26 @@ import InventoryHero from "@/components/dashboard/inventory/InventoryHero";
 import InventorySidebar from "@/components/dashboard/inventory/InventorySidebar";
 import StockActivityTable from "@/components/dashboard/inventory/StockActivityTable";
 import type { Metadata } from "next";
+import { fetchBloodStock, fetchBloodUnits } from "@/lib/api/queries";
 
 export const metadata: Metadata = {
-  title: "Inventário de Sangue | Link Life",
+  title: "Inventário de Sangue | DoaVida",
 };
 
-export default function InventarioPage() {
+export default async function InventarioPage() {
+  const [bloodStock, bloodUnits] = await Promise.all([
+    fetchBloodStock(),
+    fetchBloodUnits(),
+  ]);
+
   return (
     <div className="max-w-7xl mx-auto">
       <InventoryHero />
-      <BloodTypeCards />
+      <BloodTypeCards bloodStock={bloodStock} />
 
-      {/* Main Layout: Table + Sidebar */}
       <div className="grid grid-cols-12 gap-8">
         <div className="col-span-12 lg:col-span-8">
-          <StockActivityTable />
+          <StockActivityTable units={bloodUnits} />
         </div>
         <div className="col-span-12 lg:col-span-4">
           <InventorySidebar />

@@ -52,15 +52,9 @@ export default function Header() {
           </div>
 
           <div
-            className={`w-10 h-10 rounded-full bg-gray-200 overflow-hidden ${open} `}
+            className={`w-10 h-10 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center ${open}`}
           >
-            <Image
-              src=""
-              alt="Avatar do Administrador"
-              width={40}
-              height={40}
-              className="object-cover"
-            />
+            <span className="material-symbols-outlined text-gray-400">person</span>
           </div>
 
           <span

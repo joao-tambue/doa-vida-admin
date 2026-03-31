@@ -4,6 +4,15 @@ import { useState, useTransition } from 'react'
 import Link from 'next/link'
 import { registerAction } from '@/actions/auth/register'
 
+const BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as const
+
+const PROVINCES = [
+  'Bengo', 'Benguela', 'Bié', 'Cabinda', 'Cuando Cubango',
+  'Cuanza Norte', 'Cuanza Sul', 'Cunene', 'Huambo', 'Huíla',
+  'Luanda', 'Lunda Norte', 'Lunda Sul', 'Malanje', 'Moxico',
+  'Namibe', 'Uíge', 'Zaire',
+]
+
 function SectionLabel({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-2 mb-4 border-l-4 border-[#b7131a] pl-3">
@@ -37,10 +46,9 @@ const inputClass =
   'w-full bg-gray-50 border-none rounded-lg p-4 text-sm focus:ring-2 focus:ring-[#b7131a]/20 transition-all outline-none disabled:opacity-60'
 
 export default function RegisterForm() {
-  const [certFile, setCertFile]          = useState<File | null>(null)
-  const [acceptTerms, setAcceptTerms]    = useState(false)
-  const [errorMsg, setErrorMsg]          = useState<string | null>(null)
-  const [isPending, startTransition]     = useTransition()
+  const [acceptTerms, setAcceptTerms] = useState(false)
+  const [errorMsg, setErrorMsg]       = useState<string | null>(null)
+  const [isPending, startTransition]  = useTransition()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -52,7 +60,6 @@ export default function RegisterForm() {
     }
 
     const formData = new FormData(e.currentTarget)
-    if (certFile) formData.set('certFile', certFile)
 
     startTransition(async () => {
       const result = await registerAction(formData)
@@ -64,9 +71,9 @@ export default function RegisterForm() {
     <div className="flex-1 p-8 md:p-12">
       <div className="mb-10">
         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight mb-2">
-          Registo de Profissional
+          Registo de Utilizador
         </h1>
-        <p className="text-gray-500 font-medium text-sm">Maternidade Augusto Ngangula</p>
+        <p className="text-gray-500 font-medium text-sm">Crie a sua conta DoaVida</p>
       </div>
 
       {errorMsg && (
@@ -76,9 +83,9 @@ export default function RegisterForm() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Dados do Profissional */}
+        {/* Dados Pessoais */}
         <section>
-          <SectionLabel label="Dados do Profissional" />
+          <SectionLabel label="Dados Pessoais" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Field label="Nome Completo" fullWidth>
               <input
@@ -90,14 +97,33 @@ export default function RegisterForm() {
                 className={inputClass}
               />
             </Field>
-            <Field label="Nº de Ordem / Identificação Profissional" fullWidth>
-              <input
-                name="professionalId"
-                type="text"
+            <Field label="Tipo de Sangue">
+              <select
+                name="bloodType"
+                required
                 disabled={isPending}
-                placeholder="Ex: CRM-12345"
                 className={inputClass}
-              />
+                defaultValue=""
+              >
+                <option value="" disabled>Selecionar tipo</option>
+                {BLOOD_TYPES.map((bt) => (
+                  <option key={bt} value={bt}>{bt}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Província">
+              <select
+                name="province"
+                required
+                disabled={isPending}
+                className={inputClass}
+                defaultValue=""
+              >
+                <option value="" disabled>Selecionar província</option>
+                {PROVINCES.map((p) => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
+              </select>
             </Field>
           </div>
         </section>
@@ -106,53 +132,24 @@ export default function RegisterForm() {
         <section>
           <SectionLabel label="Contactos" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Field label="Email Profissional">
+            <Field label="Email" fullWidth>
               <input
                 name="email"
                 type="email"
                 required
                 disabled={isPending}
-                placeholder="nome.apelido@hospital.gov.ao"
-                className={inputClass}
-              />
-            </Field>
-            <Field label="Telefone de Contacto">
-              <input
-                name="phone"
-                type="tel"
-                disabled={isPending}
-                placeholder="+244 000 000 000"
+                placeholder="nome@email.com"
                 className={inputClass}
               />
             </Field>
           </div>
         </section>
 
-        {/* Certificações */}
-        <section>
-          <SectionLabel label="Certificações" />
-          <label className="border-2 border-dashed border-gray-200 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50/50 hover:bg-gray-50 transition-colors cursor-pointer">
-            <span className="material-symbols-outlined text-4xl text-[#b7131a]/40 mb-2">
-              upload_file
-            </span>
-            <span className="text-sm font-semibold text-gray-900">
-              {certFile ? certFile.name : 'Anexar Certificação Médica/Alvará'}
-            </span>
-            <span className="text-[10px] text-gray-500 mt-1">PDF, JPG ou PNG (Máx. 5MB)</span>
-            <input
-              type="file"
-              accept=".pdf,.jpg,.jpeg,.png"
-              onChange={(e) => setCertFile(e.target.files?.[0] ?? null)}
-              className="hidden"
-            />
-          </label>
-        </section>
-
         {/* Segurança */}
         <section>
           <SectionLabel label="Segurança" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Field label="Definir Palavra-passe">
+            <Field label="Palavra-passe">
               <input
                 name="password"
                 type="password"
@@ -185,7 +182,7 @@ export default function RegisterForm() {
               className="mt-1 w-4 h-4 rounded text-[#b7131a] focus:ring-[#b7131a] bg-gray-50 border-none"
             />
             <span className="text-xs text-gray-500 leading-relaxed font-medium group-hover:text-gray-900 transition-colors">
-              Aceito os termos de serviço e protocolos de segurança institucional da rede DoaVida.
+              Aceito os termos de serviço e protocolos de segurança da rede DoaVida.
             </span>
           </label>
 
