@@ -2,8 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-
-const INSTITUTION_ID = "a1b2c3d4-0000-0000-0000-000000000001"; // Maternidade Augusto Ngangula
+import type { UserRole } from "@/types/database";
 
 export async function registerAction(formData: FormData) {
   const supabase = await createClient();
@@ -12,29 +11,37 @@ export async function registerAction(formData: FormData) {
   const professionalId = formData.get("professionalId") as string;
   const email = formData.get("email") as string;
   const phone = formData.get("phone") as string;
+  const role = formData.get("role") as UserRole;
+  const institutionId = (formData.get("institutionId") as string) || null;
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
   const certFile = formData.get("certFile") as File | null;
 
-  if (!fullName || !email || !password) {
+  if (!fullName || !email || !password || !role) {
     return { error: "Por favor preencha todos os campos obrigatórios." };
   }
-
   if (password !== confirmPassword) {
     return { error: "As palavras-passe não coincidem." };
   }
-
   if (password.length < 8) {
     return { error: "A palavra-passe deve ter pelo menos 8 caracteres." };
   }
 
-  // Criar conta no Supabase Auth
+  const validRoles: UserRole[] = [
+    "admin",
+    "medico",
+    "enfermeiro",
+    "laboratorista",
+    "gestor",
+  ];
+  if (!validRoles.includes(role)) {
+    return { error: "Função profissional inválida." };
+  }
+
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
-    options: {
-      data: { full_name: fullName },
-    },
+    options: { data: { full_name: fullName } },
   });
 
   if (authError) {
@@ -47,7 +54,7 @@ export async function registerAction(formData: FormData) {
   const userId = authData.user?.id;
   if (!userId) return { error: "Erro ao criar conta. Tente novamente." };
 
-  // Upload do certificado (caso for fornecido)
+  // Upload do certificado (opcional)
   let certFileUrl: string | null = null;
   if (certFile && certFile.size > 0) {
     const ext = certFile.name.split(".").pop();
@@ -65,16 +72,17 @@ export async function registerAction(formData: FormData) {
     }
   }
 
-  // Completar o perfil do utilizador
-  const { error: profileError } = await supabase
-    .from("profiles")
-    .update({
-      professional_id: professionalId || null,
-      phone: phone || null,
-      institution_id: INSTITUTION_ID,
-      cert_file_url: certFileUrl,
-    })
-    .eq("id", userId);
+  // Criar perfil em admin_profiles
+  const { error: profileError } = await supabase.from("admin_profiles").insert({
+    id: userId,
+    full_name: fullName,
+    professional_id: professionalId || null,
+    phone: phone || null,
+    role,
+    institution_id: institutionId,
+    cert_file_url: certFileUrl,
+    is_approved: false,
+  });
 
   if (profileError) {
     return {
@@ -84,4 +92,18 @@ export async function registerAction(formData: FormData) {
   }
 
   redirect("/auth/login?registered=true");
+}
+
+// Buscar instituições para o select do formulário
+export async function getInstitutionsAction() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("institutions")
+    .select("id, name")
+    .eq("is_active", true)
+    .order("name");
+
+  if (error) return [];
+  return data ?? [];
 }

@@ -43,6 +43,88 @@ export type StockReason =
 export interface Database {
   public: {
     Tables: {
+      // ── Tabelas públicas (existem na BD) ──────────────────────────────
+      profiles: {
+        Row: {
+          id: string;
+          email: string;
+          name: string;
+          phone: string | null;
+          blood_type: string | null;
+          role: string;
+          province: string | null;
+          municipality: string | null;
+          birth_date: string | null;
+          gender: string | null;
+          created_at: string;
+        };
+        Insert: Omit<
+          Database["public"]["Tables"]["profiles"]["Row"],
+          "created_at"
+        >;
+        Update: Partial<Database["public"]["Tables"]["profiles"]["Insert"]>;
+      };
+
+      blood_requests: {
+        Row: {
+          id: string;
+          patient_name: string;
+          blood_type: string;
+          bags_quantity: number;
+          province: string;
+          hospital: string;
+          contact_phone: string;
+          description: string | null;
+          status: "pending" | "fulfilled" | "cancelled" | "active";
+          urgency: "high" | "medium" | "low";
+          user_id: string;
+          created_at: string | null;
+        };
+        Insert: Omit<
+          Database["public"]["Tables"]["blood_requests"]["Row"],
+          "id" | "created_at"
+        > & { id?: string };
+        Update: Partial<
+          Database["public"]["Tables"]["blood_requests"]["Insert"]
+        >;
+      };
+
+      volunteers: {
+        Row: {
+          id: string;
+          request_id: string;
+          donor_id: string;
+          status: "interested" | "contacted" | "donated" | "cancelled";
+          created_at: string | null;
+        };
+        Insert: Omit<
+          Database["public"]["Tables"]["volunteers"]["Row"],
+          "id" | "created_at"
+        > & { id?: string };
+        Update: Partial<Database["public"]["Tables"]["volunteers"]["Insert"]>;
+      };
+
+      notifications: {
+        Row: {
+          id: string;
+          user_id: string;
+          title: string;
+          message: string;
+          type: "new_volunteer" | "compatible_request";
+          related_id: string | null;
+          is_read: boolean | null;
+          created_at: string | null;
+        };
+        Insert: Omit<
+          Database["public"]["Tables"]["notifications"]["Row"],
+          "id" | "created_at"
+        > & { id?: string };
+        Update: Partial<
+          Database["public"]["Tables"]["notifications"]["Insert"]
+        >;
+      };
+
+      // ── Tabelas admin ─────────────────────────────────────────────────
       institutions: {
         Row: {
           id: string;
@@ -199,7 +281,6 @@ export interface Database {
     };
 
     Functions: {
-      // ⚠️ essas funções continuam apontando para "profiles" original
       my_institution_id: { Returns: string };
       my_role: { Returns: UserRole };
     };

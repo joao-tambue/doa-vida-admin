@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import { useState, useTransition } from 'react'
-import Link from 'next/link'
-import { registerAction } from '@/actions/auth/register'
+import { useEffect, useState, useTransition } from "react";
+import Link from "next/link";
+import { getInstitutionsAction, registerAction } from "@/actions/auth/register";
 
 function SectionLabel({ label }: { label: string }) {
   return (
@@ -11,7 +11,7 @@ function SectionLabel({ label }: { label: string }) {
         {label}
       </span>
     </div>
-  )
+  );
 }
 
 function Field({
@@ -19,45 +19,55 @@ function Field({
   children,
   fullWidth = false,
 }: {
-  label: string
-  children: React.ReactNode
-  fullWidth?: boolean
+  label: string;
+  children: React.ReactNode;
+  fullWidth?: boolean;
 }) {
   return (
-    <div className={`space-y-1 ${fullWidth ? 'md:col-span-2' : ''}`}>
+    <div className={`space-y-1 ${fullWidth ? "md:col-span-2" : ""}`}>
       <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider ml-1 block">
         {label}
       </label>
       {children}
     </div>
-  )
+  );
 }
 
 const inputClass =
-  'w-full bg-gray-50 border-none rounded-lg p-4 text-sm focus:ring-2 focus:ring-[#b7131a]/20 transition-all outline-none disabled:opacity-60'
+  "w-full bg-gray-50 border-none rounded-lg p-4 text-sm focus:ring-2 focus:ring-[#b7131a]/20 transition-all outline-none disabled:opacity-60";
 
 export default function RegisterForm() {
-  const [certFile, setCertFile]          = useState<File | null>(null)
-  const [acceptTerms, setAcceptTerms]    = useState(false)
-  const [errorMsg, setErrorMsg]          = useState<string | null>(null)
-  const [isPending, startTransition]     = useTransition()
+  const [certFile, setCertFile] = useState<File | null>(null);
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+  const [institutions, setInstitutions] = useState<
+    { id: string; name: string }[]
+  >([]);
+  const [loadingInst, setLoadingInst] = useState(true);
+
+  useEffect(() => {
+    getInstitutionsAction()
+      .then(setInstitutions)
+      .finally(() => setLoadingInst(false));
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setErrorMsg(null)
+    e.preventDefault();
+    setErrorMsg(null);
 
     if (!acceptTerms) {
-      setErrorMsg('Deve aceitar os termos de serviço para continuar.')
-      return
+      setErrorMsg("Deve aceitar os termos de serviço para continuar.");
+      return;
     }
 
-    const formData = new FormData(e.currentTarget)
-    if (certFile) formData.set('certFile', certFile)
+    const formData = new FormData(e.currentTarget);
+    if (certFile) formData.set("certFile", certFile);
 
     startTransition(async () => {
-      const result = await registerAction(formData)
-      if (result?.error) setErrorMsg(result.error)
-    })
+      const result = await registerAction(formData);
+      if (result?.error) setErrorMsg(result.error);
+    });
   }
 
   return (
@@ -66,7 +76,9 @@ export default function RegisterForm() {
         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight mb-2">
           Registo de Profissional
         </h1>
-        <p className="text-gray-500 font-medium text-sm">Maternidade Augusto Ngangula</p>
+        <p className="text-gray-500 font-medium text-sm">
+          Plataforma DoaVida — Rede de Bancos de Sangue
+        </p>
       </div>
 
       {errorMsg && (
@@ -98,6 +110,45 @@ export default function RegisterForm() {
                 placeholder="Ex: CRM-12345"
                 className={inputClass}
               />
+            </Field>
+          </div>
+        </section>
+
+        {/* Função e Instituição */}
+        <section>
+          <SectionLabel label="Função e Instituição" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Field label="Função Profissional">
+              <select
+                name="role"
+                required
+                disabled={isPending}
+                className={inputClass}
+              >
+                <option value="">Selecionar Função</option>
+                <option value="gestor">Gestor</option>
+                <option value="admin">Administrador</option>
+                <option value="medico">Médico</option>
+                <option value="enfermeiro">Enfermeiro</option>
+                <option value="laboratorista">Laboratorista</option>
+              </select>
+            </Field>
+
+            <Field label="Instituição (opcional)">
+              <select
+                name="institutionId"
+                disabled={isPending || loadingInst}
+                className={inputClass}
+              >
+                <option value="">
+                  {loadingInst ? "A carregar..." : "Selecionar Instituição"}
+                </option>
+                {institutions.map((inst) => (
+                  <option key={inst.id} value={inst.id}>
+                    {inst.name}
+                  </option>
+                ))}
+              </select>
             </Field>
           </div>
         </section>
@@ -136,9 +187,11 @@ export default function RegisterForm() {
               upload_file
             </span>
             <span className="text-sm font-semibold text-gray-900">
-              {certFile ? certFile.name : 'Anexar Certificação Médica/Alvará'}
+              {certFile ? certFile.name : "Anexar Certificação Médica / Alvará"}
             </span>
-            <span className="text-[10px] text-gray-500 mt-1">PDF, JPG ou PNG (Máx. 5MB)</span>
+            <span className="text-[10px] text-gray-500 mt-1">
+              PDF, JPG ou PNG (Máx. 5MB)
+            </span>
             <input
               type="file"
               accept=".pdf,.jpg,.jpeg,.png"
@@ -185,7 +238,8 @@ export default function RegisterForm() {
               className="mt-1 w-4 h-4 rounded text-[#b7131a] focus:ring-[#b7131a] bg-gray-50 border-none"
             />
             <span className="text-xs text-gray-500 leading-relaxed font-medium group-hover:text-gray-900 transition-colors">
-              Aceito os termos de serviço e protocolos de segurança institucional da rede DoaVida.
+              Aceito os termos de serviço e protocolos de segurança
+              institucional da rede DoaVida.
             </span>
           </label>
 
@@ -201,7 +255,7 @@ export default function RegisterForm() {
                   <span>A registar...</span>
                 </>
               ) : (
-                'Finalizar Registo'
+                "Finalizar Registo"
               )}
             </button>
             <Link
@@ -214,5 +268,5 @@ export default function RegisterForm() {
         </div>
       </form>
     </div>
-  )
+  );
 }

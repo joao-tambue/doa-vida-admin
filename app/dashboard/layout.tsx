@@ -1,73 +1,46 @@
-// import type { Metadata } from "next";
-// import { Manrope, Inter } from "next/font/google";
-// import "./globals.css";
-// import Sidebar from "@/components/dashboard/Sidebar";
-// import Header from "@/components/dashboard/Header";
-// import UrgentAlert from "@/components/dashboard/UrgentAlert";
-
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 import Header from "@/components/dashboard/Header";
 import Sidebar from "@/components/dashboard/Sidebar";
-import UrgentAlert from "@/components/dashboard/UrgentAlert";
-import { Toaster } from "react-hot-toast";
+import type { UserRole } from "@/types/database";
 
-// const manrope = Manrope({
-//   subsets: ["latin"],
-//   variable: "--font-manrope",
-//   weight: ["400", "600", "700", "800"],
-// });
-
-// const inter = Inter({
-//   subsets: ["latin"],
-//   variable: "--font-inter",
-//   weight: ["400", "500", "600"],
-// });
-
-// export const metadata: Metadata = {
-//   title: "DoaVida | Painel Hospitalar",
-//   description: "Sistema de Gestão de Doações de Sangue",
-// };
-
-// export default function RootLayout({
-//   children,
-// }: {
-//   children: React.ReactNode;
-// }) {
-//   return (
-//     <html lang="pt-PT" className={`${manrope.variable} ${inter.variable}`}>
-//       <head>
-//         <link
-//           rel="stylesheet"
-//           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-//         />
-//       </head>
-//       <body className="bg-gray-50 text-gray-900 flex min-h-screen">
-//         <Sidebar />
-//         <div className="flex-1 ml-64 min-h-screen flex flex-col">
-//           <Header />
-//           <main className="mt-16 p-10 flex-1">{children}</main>
-//         </div>
-//         {/* <UrgentAlert /> */}
-//       </body>
-//     </html>
-//   );
-// }
-
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/auth/login");
+
+  const { data: profile } = await supabase
+    .from("admin_profiles")
+    .select("full_name, role, institution_id, institutions(name)")
+    .eq("id", user.id)
+    .returns<{
+      full_name: string;
+      role: UserRole;
+      institution_id: string | null;
+      institutions: { name: string } | null;
+    }>()
+    .single();
+
+  const fullName = profile?.full_name ?? "Utilizador";
+  const role = (profile?.role ?? "enfermeiro") as UserRole;
+  const email = user.email ?? "";
+  const institutionName = profile?.institutions?.name ?? "Hospital";
+
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <div className="flex-1 ml-64 min-h-screen flex flex-col">
-        <Header />
-        <main className="mt-16 p-10 flex-1">
-          {children}
-          <Toaster position="top-center" reverseOrder={false} />
-        </main>
+    <div className="min-h-screen bg-gray-50">
+      <Sidebar role={role} institutionName={institutionName} />
+      <div className="ml-64">
+        <Header fullName={fullName} email={email} role={role} />
+        <main className="pt-16">{children}</main>
       </div>
-      {/* <UrgentAlert /> */}
     </div>
   );
 }

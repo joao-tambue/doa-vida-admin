@@ -14,9 +14,9 @@ export async function createBloodRequestAction(formData: FormData) {
   } = await supabase.auth.getUser();
   if (userError || !user) redirect("/auth/login");
 
-  // Buscar perfil para institution_id
+  // Buscar perfil em admin_profiles (tem institution_id e is_approved)
   const { data: profile, error: profileError } = await supabase
-    .from("profiles")
+    .from("admin_profiles")
     .select("institution_id, is_approved")
     .eq("id", user.id)
     .single();
@@ -34,7 +34,15 @@ export async function createBloodRequestAction(formData: FormData) {
   const diagnosis = formData.get("diagnosis") as string;
   const bloodType = formData.get("bloodType") as string;
   const unitsRequested = parseInt(formData.get("unitsRequested") as string, 10);
-  const urgency = formData.get("urgency") as "normal" | "critico";
+
+  // Normalizar urgência: "Normal" → "normal", "Crítico" → "critico"
+  const urgencyRaw = (formData.get("urgency") as string) ?? "Normal";
+  const urgency: "normal" | "critico" =
+    urgencyRaw.toLowerCase() === "crítico" ||
+    urgencyRaw.toLowerCase() === "critico"
+      ? "critico"
+      : "normal";
+
   const contactPerson = formData.get("contactPerson") as string;
   const contactPhone = formData.get("contactPhone") as string;
   const clinicalNotes = formData.get("clinicalNotes") as string;
@@ -44,10 +52,11 @@ export async function createBloodRequestAction(formData: FormData) {
   if (!patientName || !diagnosis || !bloodType || !unitsRequested) {
     return { error: "Por favor preencha todos os campos obrigatórios." };
   }
-
   if (isNaN(unitsRequested) || unitsRequested < 1) {
     return { error: "Número de unidades inválido." };
   }
+
+  // Upload de ficheiro médico (opcional)
   let medicalRecordsUrl: string | null = null;
   if (medicalFile && medicalFile.size > 0) {
     const ext = medicalFile.name.split(".").pop();
@@ -65,9 +74,9 @@ export async function createBloodRequestAction(formData: FormData) {
     }
   }
 
-  // Inserir pedido
+  // Inserir pedido na tabela correcta: admin_blood_requests
   const { data: request, error: insertError } = await supabase
-    .from("blood_requests")
+    .from("admin_blood_requests")
     .insert({
       institution_id: profile.institution_id,
       requested_by: user.id,
@@ -75,7 +84,7 @@ export async function createBloodRequestAction(formData: FormData) {
       diagnosis,
       blood_type: bloodType,
       units_requested: unitsRequested,
-      urgency: urgency ?? "normal",
+      urgency,
       contact_person: contactPerson || null,
       contact_phone: contactPhone || null,
       clinical_notes: clinicalNotes || null,
@@ -89,8 +98,8 @@ export async function createBloodRequestAction(formData: FormData) {
     return { error: "Erro ao criar pedido: " + insertError.message };
   }
 
-  // Notificar o próprio utilizador
-  await supabase.from("notifications").insert({
+  // Notificar via admin_notifications (estrutura correcta)
+  await supabase.from("admin_notifications").insert({
     user_id: user.id,
     type: "pedido_novo",
     title: "Pedido criado com sucesso",
