@@ -35,7 +35,7 @@ export default function InstitutionalProfile() {
               Nome do Hospital
             </label>
             <p className="text-gray-900 font-semibold text-lg">
-              Hospital Central de Luanda
+              Hospital Materno Augusto Ngangula
             </p>
           </div>
 
@@ -48,7 +48,7 @@ export default function InstitutionalProfile() {
                 location_on
               </span>
               <p className="text-gray-500 text-sm leading-relaxed">
-                Rua de Amílcar Cabral, Luanda, Angola
+                Rua Ndunduma, nº 37, Município de Luanda, Luanda, Angola
               </p>
             </div>
           </div>
@@ -64,7 +64,7 @@ export default function InstitutionalProfile() {
               </p>
               <p className="text-gray-900 font-medium flex items-center gap-2">
                 <span className="material-symbols-outlined text-xs">mail</span>
-                logistics@hcluanda.ao
+                hemoterapia@hmaugustongangula.ao
               </p>
             </div>
           </div>

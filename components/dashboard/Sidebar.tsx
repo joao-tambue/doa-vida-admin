@@ -26,10 +26,10 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="mb-10 px-2">
         <h1 className="text-2xl font-black text-red-700">
-          DoaVida
+          Link Life
         </h1>
         <p className="text-xs font-bold tracking-widest uppercase text-gray-500 mt-1">
-          Hospital Central
+          Hospital Materno Augusto Ngangula
         </p>
       </div>
 
@@ -54,16 +54,6 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* CTA Button */}
-      <div className="mt-auto px-2">
-        <Link
-          href="/criar-pedido"
-          className="w-full bg-[#b7131a] text-white py-3 rounded-full font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#db322f] transition-all active:scale-95 duration-150"
-        >
-          <span className="material-symbols-outlined">add</span>
-          Novo Pedido
-        </Link>
-      </div>
     </aside>
   );
 }

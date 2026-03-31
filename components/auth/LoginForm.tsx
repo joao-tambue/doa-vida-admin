@@ -27,16 +27,15 @@ export default function LoginForm() {
 
   return (
     <div className="p-8 md:p-16 flex flex-col justify-center">
-      {/* Mobile logo */}
       <div className="mb-10 lg:hidden">
         <span className="text-2xl font-black tracking-tighter text-[#b7131a]">
-          DoaVida Health
+          Link Life
         </span>
       </div>
 
       <header className="mb-10">
         <h1 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">
-          Bem-vindo ao DoaVida Hospitalar
+          Bem-vindo ao Link Life
         </h1>
         <p className="text-gray-500">Inicie sessão para gerir pedidos e inventário</p>
       </header>
@@ -89,12 +88,6 @@ export default function LoginForm() {
             >
               Palavra-passe
             </label>
-            <Link
-              href="/auth/recuperar-password"
-              className="text-[11px] font-semibold text-[#b7131a] hover:underline uppercase tracking-wider"
-            >
-              Esqueci a palavra-passe
-            </Link>
           </div>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -119,6 +112,12 @@ export default function LoginForm() {
                 {showPassword ? 'visibility_off' : 'visibility'}
               </span>
             </button>
+            <Link
+              href="/auth/recuperar-password"
+              className="text-[11px] font-semibold text-[#b7131a] mt-8 hover:underline uppercase tracking-wider"
+            >
+              Esqueci a palavra-passe
+            </Link>
           </div>
         </div>
 

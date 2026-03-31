@@ -9,7 +9,7 @@ export default function InventoryHero() {
           Inventário de Sangue
         </h2>
       </div>
-      <div className="flex gap-3">
+      {/* <div className="flex gap-3">
         <button className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-gray-200 transition-colors">
           <span className="material-symbols-outlined text-lg">upload_file</span>
           Exportar Relatório
@@ -18,7 +18,7 @@ export default function InventoryHero() {
           <span className="material-symbols-outlined text-lg">add</span>
           Registar Novas Unidades
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
 
 export default function SecurityPanel() {
-  const [twoFactor, setTwoFactor] = useState<boolean>(true);
 
   return (
     <section className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
@@ -23,31 +21,6 @@ export default function SecurityPanel() {
             chevron_right
           </span>
         </button>
-
-        <div className="flex items-center justify-between p-3 rounded-lg border border-gray-100">
-          <div>
-            <p className="text-sm font-semibold text-gray-500">
-              Autenticação de Dois Fatores
-            </p>
-            <p className="text-[10px] text-gray-400">
-              Camada extra de segurança
-            </p>
-          </div>
-
-          <button
-            onClick={() => setTwoFactor((v) => !v)}
-            aria-label="Toggle autenticação de dois fatores"
-            className={`w-10 h-5 rounded-full relative transition-colors ${
-              twoFactor ? "bg-[#008097]" : "bg-gray-200"
-            }`}
-          >
-            <div
-              className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${
-                twoFactor ? "right-1" : "left-1"
-              }`}
-            />
-          </button>
-        </div>
       </div>
     </section>
   );

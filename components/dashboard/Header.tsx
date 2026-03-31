@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
 import { logoutAction } from "@/actions/auth/login";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -41,12 +41,6 @@ export default function Header() {
           <span className="material-symbols-outlined">notifications</span>
           <span className="absolute top-0 right-0 w-2 h-2 bg-[#b7131a] rounded-full border-2 border-white" />
         </button>
-
-        <button className="text-gray-600 hover:text-red-600 transition-colors">
-          <span className="material-symbols-outlined">help</span>
-        </button>
-
-        {/* Perfil */}
         <div
           ref={dropdownRef}
           className="relative flex items-center gap-3 pl-4 border-l border-gray-200 cursor-pointer"
@@ -61,7 +55,7 @@ export default function Header() {
             className={`w-10 h-10 rounded-full bg-gray-200 overflow-hidden ${open} `}
           >
             <Image
-              src="https://github.com/joao-tambue.png"
+              src=""
               alt="Avatar do Administrador"
               width={40}
               height={40}
@@ -70,9 +64,8 @@ export default function Header() {
           </div>
 
           <span
-            className={`material-symbols-outlined text-gray-400 transition-transform ${
-              open ? "rotate-180" : ""
-            }`}
+            className={`material-symbols-outlined text-gray-400 transition-transform ${open ? "rotate-180" : ""
+              }`}
           >
             expand_more
           </span>

@@ -28,14 +28,14 @@ const stats: StatCard[] = [
     iconColor: "text-gray-600",
     icon: "pending",
   },
-  {
-    label: "Concluídos Hoje",
-    value: "12 Unidades",
-    valueColor: "text-[#006578]",
-    iconBg: "bg-[#008097]",
-    iconColor: "text-white",
-    icon: "check_circle",
-  },
+  // {
+  //   label: "Concluídos Hoje",
+  //   value: "12 Unidades",
+  //   valueColor: "text-[#006578]",
+  //   iconBg: "bg-[#008097]",
+  //   iconColor: "text-white",
+  //   icon: "check_circle",
+  // },
 ];
 
 export default function StatsCards() {

@@ -10,7 +10,7 @@ import {
 import { createBloodRequestAction } from "@/actions/requests/create";
 
 export type BloodType = "O+" | "O-" | "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-";
-export type Urgency = "normal" | "critico";
+export type Urgency = "Normal" | "Crítico" | "Urgente";
 export type Diagnosis =
   | ""
   | "Cirurgia de Emergência"
@@ -67,7 +67,7 @@ export function BloodRequestProvider({
     diagnosis: "",
     bloodType: "A+",
     units: 1,
-    urgency: "normal",
+    urgency: "Normal",
     contactPerson: "",
     contactPhone: "",
     clinicalNotes: "",

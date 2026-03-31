@@ -3,7 +3,7 @@ import StatsCards from "@/components/dashboard/actives-requested/StatsCards";
 import RequestsTable from "@/components/dashboard/actives-requested/RequestsTable";
 
 export const metadata: Metadata = {
-  title: "Pedidos Ativos | DoaVida",
+  title: "Pedidos Ativos | Link Life",
 };
 
 export default function PedidosAtivosPage() {
@@ -30,10 +30,10 @@ export default function PedidosAtivosPage() {
             </span>
             Filtrar
           </button>
-          <button className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-xl font-semibold text-sm hover:bg-gray-100 transition-colors border border-gray-100 shadow-sm">
+          {/* <button className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-xl font-semibold text-sm hover:bg-gray-100 transition-colors border border-gray-100 shadow-sm">
             <span className="material-symbols-outlined text-lg">download</span>
             Exportar PDF
-          </button>
+          </button> */}
         </div>
       </div>
 

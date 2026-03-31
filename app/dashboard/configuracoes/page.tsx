@@ -6,7 +6,7 @@ import UserManagement from "@/components/dashboard/settings/UserManagement";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Configurações | DoaVida",
+  title: "Configurações | Link Life",
 };
 
 export default function ConfiguracoesPage() {
@@ -18,7 +18,6 @@ export default function ConfiguracoesPage() {
         <InstitutionalProfile />
         <SettingsSidePanels />
         <UserManagement />
-        <SettingsFooter />
       </div>
     </div>
   );

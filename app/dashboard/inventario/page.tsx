@@ -5,7 +5,7 @@ import StockActivityTable from "@/components/dashboard/inventory/StockActivityTa
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Inventário de Sangue | DoaVida",
+  title: "Inventário de Sangue | Link Life",
 };
 
 export default function InventarioPage() {
