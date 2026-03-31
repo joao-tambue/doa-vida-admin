@@ -10,7 +10,7 @@ const WAIT_TIMES: Record<string, string> = {
 export default function RequestSummarySidebar() {
   const { form, isPending, submit, saveDraft } = useBloodRequest();
 
-  const isCritical = form.urgency === "critico";
+  const isCritical = form.urgency === "Crítico";
   const waitTime = WAIT_TIMES[form.urgency];
   const unitsLabel = String(form.units).padStart(2, "0");
 

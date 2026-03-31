@@ -147,8 +147,6 @@ export default function InventorySidebar() {
   return (
     <div className="space-y-8">
       <MonthlyAnalysis />
-      <ExpirationAlert />
-      <QuickLog />
     </div>
   );
 }

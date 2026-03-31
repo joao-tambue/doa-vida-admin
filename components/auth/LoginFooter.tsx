@@ -4,16 +4,16 @@ interface FooterLink {
 }
 
 const FOOTER_LINKS: FooterLink[] = [
-  { label: "Privacy Policy",      href: "#" },
-  { label: "Institutional Terms", href: "#" },
-  { label: "HIPAA Compliance",    href: "#" },
-  { label: "System Status",       href: "#" },
+  { label: "Políticas de Privacidade",      href: "#" },
+  { label: "Termos Institucionais", href: "#" },
+  { label: "Conformidade HIPAA",    href: "#" },
+  { label: "Estado do Sistema",       href: "#" },
 ];
 
 export default function LoginFooter() {
   return (
     <footer className="w-full py-8 px-6 flex flex-col md:flex-row justify-between items-center gap-4 bg-gray-50 border-t border-gray-100">
-      <div className="text-lg font-bold text-gray-900">DoaVida Health</div>
+      <div className="text-lg font-bold text-gray-900">Link Life</div>
 
       <div className="flex flex-wrap justify-center gap-6">
         {FOOTER_LINKS.map((link) => (
@@ -28,7 +28,7 @@ export default function LoginFooter() {
       </div>
 
       <div className="text-[11px] font-medium tracking-wide uppercase text-gray-400">
-        © 2024 DoaVida Health Logistics. Secure Clinical Environment.
+        © 2026 Link Life. Todos os direitos reservados.
       </div>
     </footer>
   );

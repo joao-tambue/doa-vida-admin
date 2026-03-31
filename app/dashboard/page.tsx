@@ -7,7 +7,7 @@ import FloatingActionButton from "@/components/dashboard/painel-geral/FloatingAc
 import RecentRequests from "@/components/dashboard/painel-geral/RecentRequests";
 
 export const metadata: Metadata = {
-  title: "Painel Geral | DoaVida",
+  title: "Painel Geral | Link Life",
 };
 
 export default function Home() {

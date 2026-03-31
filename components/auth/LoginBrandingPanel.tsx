@@ -6,18 +6,17 @@ export default function LoginBrandingPanel() {
 
       <div className="relative z-10">
         <span className="text-3xl font-black tracking-tighter text-[#b7131a]">
-          DoaVida Health
+          Link Life
         </span>
 
         <div className="mt-24">
           <h2 className="text-5xl font-extrabold leading-tight tracking-tight text-gray-900">
-            Logística de Vida,
+            Logística de Vida:
             <br />
             <span className="text-[#b7131a]">Pulso Clínico.</span>
           </h2>
-          <p className="mt-6 text-gray-500 max-w-md text-lg leading-relaxed">
-            Gestão inteligente de inventário e rede de doação hospitalar em
-            tempo real. A sua eficiência salva vidas.
+          <p className="mt-6 text-gray-500 text-justify max-w-md text-lg leading-relaxed">
+            Transforme a sua disponibilidade em esperança. Uma plataforma inteligente que liga doadores a pedidos urgentes com a precisão que a medicina exige.
           </p>
         </div>
       </div>

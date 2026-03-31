@@ -39,25 +39,24 @@ export const STATUS_CONFIG: Record<
   HistoryStatus,
   { dot: string; text: string; label: string }
 > = {
-  Fulfilled: {
+  Concluído: {
     dot: "bg-[#006578]",
     text: "text-[#008097]",
-    label: "Fulfilled",
+    label: "Concluído",
   },
-  Expired: {
+  Expirado: {
     dot: "bg-zinc-400",
     text: "text-zinc-400",
-    label: "Expired",
+    label: "Expirado",
   },
-  Cancelled: {
+  Cancelado: {
     dot: "bg-[#ba1a1a]",
     text: "text-[#ba1a1a]",
-    label: "Cancelled",
+    label: "Cancelado",
   },
 };
 
-type HistoryStatus = "Fulfilled" | "Expired" | "Cancelled";
-type HistoryUrgency = "Emergency" | "Normal" | "Urgent";
+type HistoryStatus = "Concluído" | "Expirado" | "Cancelado";
 
 interface HistoryRecord {
   id: string;
@@ -65,7 +64,6 @@ interface HistoryRecord {
   patient: string;
   bloodType: string;
   bloodBg: string;
-  urgency: HistoryUrgency;
   units: number;
   status: HistoryStatus;
 }
@@ -77,9 +75,8 @@ export const RECORDS: HistoryRecord[] = [
     patient: "Mariana Gonçalves",
     bloodType: "O-",
     bloodBg: "bg-red-50 text-red-700",
-    urgency: "Emergency",
     units: 4,
-    status: "Fulfilled",
+    status: "Concluído",
   },
   {
     id: "REQ-2023-889",
@@ -87,19 +84,17 @@ export const RECORDS: HistoryRecord[] = [
     patient: "João de Almeida",
     bloodType: "A+",
     bloodBg: "bg-zinc-100 text-zinc-700",
-    urgency: "Normal",
     units: 2,
-    status: "Fulfilled",
+    status: "Concluído",
   },
   {
     id: "REQ-2023-884",
     datetime: "Oct 22, 2023 · 21:45",
-    patient: "Unknown Patient (Trauma)",
+    patient: "Paciente Desconhecido (Trauma)",
     bloodType: "B-",
     bloodBg: "bg-red-50 text-red-700",
-    urgency: "Emergency",
     units: 6,
-    status: "Expired",
+    status: "Expirado",
   },
   {
     id: "REQ-2023-876",
@@ -107,9 +102,8 @@ export const RECORDS: HistoryRecord[] = [
     patient: "Cláudia Mendonça",
     bloodType: "AB+",
     bloodBg: "bg-zinc-100 text-zinc-700",
-    urgency: "Urgent",
     units: 3,
-    status: "Cancelled",
+    status: "Cancelado",
   },
   {
     id: "REQ-2023-870",
@@ -117,8 +111,7 @@ export const RECORDS: HistoryRecord[] = [
     patient: "Beatriz Luaces",
     bloodType: "O+",
     bloodBg: "bg-red-50 text-red-700",
-    urgency: "Normal",
     units: 1,
-    status: "Fulfilled",
+    status: "Concluído",
   },
 ];

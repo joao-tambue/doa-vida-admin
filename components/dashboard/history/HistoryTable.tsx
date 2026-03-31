@@ -3,13 +3,13 @@
 import { RECORDS, STATUS_CONFIG } from "@/data/history";
 import { useState } from "react";
 
-type FilterTab = "ALL" | "FULFILLED" | "EXPIRED";
+type FilterTab = "Todos" | "Concluído" | "Expirado";
 
-const FILTER_TABS: FilterTab[] = ["ALL", "FULFILLED", "EXPIRED"];
+const FILTER_TABS: FilterTab[] = ["Todos", "Concluído", "Expirado"];
 
-// type HistoryStatus = "Fulfilled" | "Expired" | "Cancelled";
+// type HistoryStatus = "Concluído" | "Expirado" | "Cancelled";
 type HistoryUrgency = "Emergency" | "Normal" | "Urgent";
-// type FilterTab = "ALL" | "FULFILLED" | "EXPIRED";
+// type FilterTab = "Todos" | "Concluído" | "Expirado";
 
 export const URGENCY_CONFIG: Record<HistoryUrgency, string> = {
   Emergency: "bg-[#ffdad6] text-[#93000a]",
@@ -18,13 +18,13 @@ export const URGENCY_CONFIG: Record<HistoryUrgency, string> = {
 };
 
 export default function HistoryTable() {
-  const [activeTab, setActiveTab] = useState<FilterTab>("ALL");
+  const [activeTab, setActiveTab] = useState<FilterTab>("Todos");
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const filtered = RECORDS.filter((r) => {
-    if (activeTab === "ALL") return true;
-    if (activeTab === "FULFILLED") return r.status === "Fulfilled";
-    if (activeTab === "EXPIRED") return r.status === "Expired";
+    if (activeTab === "Todos") return true;
+    if (activeTab === "Concluído") return r.status === "Concluído";
+    if (activeTab === "Expirado") return r.status === "Expirado";
     return true;
   });
 
@@ -33,7 +33,7 @@ export default function HistoryTable() {
       <div className="px-8 py-6 flex justify-between items-center border-b border-zinc-100">
         <div className="flex gap-6 items-center">
           <h3 className="font-extrabold text-lg text-gray-900">
-            Archive Record
+            Dados Arquivados
           </h3>
           <div className="flex gap-2">
             {FILTER_TABS.map((tab) => (
@@ -52,7 +52,7 @@ export default function HistoryTable() {
           </div>
         </div>
         <p className="text-xs text-zinc-400 font-medium italic">
-          Showing {filtered.length} of 2,410 entries
+          Mostrando {filtered.length} de 2,410 Casos
         </p>
       </div>
 
@@ -66,7 +66,6 @@ export default function HistoryTable() {
                 "Date & Time",
                 "Patient",
                 "Blood Type",
-                "Urgency",
                 "Units",
                 "Status",
                 "Action",
@@ -106,13 +105,6 @@ export default function HistoryTable() {
                       {record.bloodType}
                     </span>
                   </td>
-                  <td className="px-8 py-5">
-                    <span
-                      className={`px-2 py-0.5 text-[10px] font-black rounded uppercase tracking-tighter ${URGENCY_CONFIG[record.urgency]}`}
-                    >
-                      {record.urgency}
-                    </span>
-                  </td>
                   <td className="px-8 py-5 text-center font-bold text-sm">
                     {record.units}
                   </td>
@@ -147,7 +139,7 @@ export default function HistoryTable() {
           className="flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-gray-900 transition-colors"
         >
           <span className="material-symbols-outlined text-lg">arrow_back</span>
-          Previous
+          Anterior
         </button>
         <div className="flex items-center gap-2">
           {[1, 2, 3].map((page) => (
@@ -172,7 +164,7 @@ export default function HistoryTable() {
           onClick={() => setCurrentPage((p) => p + 1)}
           className="flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-gray-900 transition-colors"
         >
-          Next
+          Próximo
           <span className="material-symbols-outlined text-lg">
             arrow_forward
           </span>
